@@ -1,53 +1,59 @@
-var toolbox = require('./toolbox.js')
-var jeu= require('./jeu.js')
+const tour = document.querySelector('#tour');
+const alert = document.querySelector('.alert');
+const messageJ1 = document.querySelector('#j1');
+const messageJ2 = document.querySelector('#j2');
+var joueurEnCours = 1;
+var finJeu = false;
 
-intro();
-jeu.joueur1car = choixCaractere(1)
-jeu.joueur2car = choixCaractere(2)
-jeu.initialisation();
-jeu.afficherPuissance4();
+var pointJ1 = 0;
+var pointJ2 = 0;
 
-while(true){
-    if(jouerCase(1)){
-        console.log("Joueur 1 a gagné");
-        break;
-    }
-    if(jouerCase(2)){
-        console.log("Joueur 2 a gagné");
-        break;
-    }
-}
+initialisationTableau();
 
-function intro(){
-    var txt ='****************************************\n';
-    txt += '******* Bienvenue sur Puissance 4 ******\n';
-    txt += '****************************************';
-    console.log(txt)
-}
-
-function choixCaractere(joueur){
-    var txt='Veuillez choisir le caractere que vous voulez pour joueur ' + joueur + ' : ';
-    return toolbox.saisieString(txt);
-}
-
-
-
-/**
- * Fonction permettant à un joueur de jouer une case
- * Retourne true si le joueur a gagné
- * @param {Number} joueur 
- */
-function jouerCase(joueur){
-    var ligneVide = -1;
-    var colonne = -1;
-    while(ligneVide === -1 || colonne <=0 || colonne >7){
-        console.log("Choisir une colonne à un emplacement vide");
-        var colonne = jeu.saisirColonne();
+function jouer(colonne){
+    if(!finJeu){
         var ligneVide = jeu.retournerLigneCaseVideColonne(colonne);
+        if(ligneVide !== -1){
+            jeu.jouerCase(joueurEnCours,ligneVide,colonne);
+            jeu.afficherPuissance4();
+            if(jeu.verificationFinJeu(joueurEnCours)){
+                gererFinJeu();
+            }
+            if(joueurEnCours === 1){
+                joueurEnCours = 2;
+                tour.innerHTML = 'Tour du joueur 2'
+            } else {
+                joueurEnCours = 1;
+                tour.innerHTML = 'Tour du joueur 1'
+            }
+        }
     }
-    jeu.jouerCase(joueur,ligneVide,colonne);
+}
+function initialisationTableau(){
+    finJeu = false;
+    joueurEnCours = 1;
+    alert.classList.add("d-none");
+    var contentJ1 = "<img src='./images/J1.png' class='bg-danger rounded-circle'/></br>";
+    contentJ1 += pointJ1;
+    messageJ1.innerHTML = contentJ1;
+    var contentJ2 = "<img src='./images/J2.png' class='bg-info rounded-circle'/></br>";
+    contentJ2 += pointJ2;
+    messageJ2.innerHTML = contentJ2;
+    jeu.initialisation();
     jeu.afficherPuissance4();
-    return jeu.verificationFinJeu(joueur);
+}
+
+function gererFinJeu(){
+    finJeu = true;
+    var contentAlert ="Partie terminée, le gagnant est : "+joueurEnCours+"<br/>";
+    contentAlert += '<button type="button" classe="btn btn-secondary" onClick = initialisationTableau()>Recommencez</button>'
+    alert.innerHTML = contentAlert;
+    alert.classList.remove("d-none");
+    if(joueurEnCours === 1){
+        pointJ1++;
+    } else {
+        pointJ2++;
+    }
 }
 
 

@@ -1,4 +1,4 @@
- var toolbox = require('./toolbox.js')
+//  var toolbox = require('./toolbox.js')
  jeu = {
      puissance4 : [],
      nbColonne : 7,
@@ -12,22 +12,38 @@
      },
     
     afficherPuissance4 : function(){
-        for(var i=0; i < this.puissance4.length;i++){
-            var ligne="";
-            for(var j=0; j < this.puissance4[i].length;j++){
-                ligne += "| ";
+        const jeu = document.querySelector('#jeu');
+        jeu.innerHTML = "";
+
+        var content = "<table>";
+        for(var i=0; i < this.nbLigne;i++){
+            content += "<tr>";
+            for(var j=0; j < this.nbColonne;j++){
+                content += "<td class='border text-center' style='width:100px;height:100px'>";
                 if(this.puissance4[i][j] === 0){
-                    ligne += "_";
-                } else if(this.puissance4[i][j] === 1){
-                    ligne += this.joueur1car;
-                } else if(this.puissance4[i][j] === 2){
-                    ligne += this.joueur2car;
+                    content += "";
+                } else if (this.puissance4[i][j] === 1){
+                    content += "<img src='./images/J1.png' class='bg-danger rounded-circle'/>";
+                } if(this.puissance4[i][j] === 2){
+                    content += "<img src='./images/J2.png' class='bg-info rounded-circle'/>";
                 }
-                ligne += " |";
+                content += "</td>";
             }
-            console.log(ligne);
+            content += "</tr>";
         }
+        content += "<tr>";
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(1)">Colonne1</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(2)">Colonne2</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(3)">Colonne3</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(4)">Colonne4</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(5)">Colonne5</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(6)">Colonne6</button></td>';
+        content += '<td><button type="button" class="btn btn-secondary" onClick="jouer(7)">Colonne7</button></td>';
+        content += "</tr>";
+        content+= "</table>";
+        jeu.innerHTML = content;
     },
+
     jouerCase : function(joueur,ligne,colonne){
         this.puissance4[ligne][colonne-1] = joueur;
     },
@@ -123,4 +139,4 @@
         return false;
     }
 }
-module.exports = jeu;
+// module.exports = jeu;
